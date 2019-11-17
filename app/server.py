@@ -150,11 +150,11 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname):
-    locked = None
-    if angle == '45' or angle == '135':
-        locked = 'locked'
-    else:
-        locked = 'unlocked'
+    # locked = None
+    # if angle == '45' or angle == '135':
+    #     locked = 'locked'
+    # else:
+    #     locked = 'unlocked'
     temp = {"payload": {
         "google": {
             "expectUserResponse": False,
@@ -162,7 +162,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": f'The lock in the image appears to be {locked}.'
+                            "textToSpeech": f'The lock in the image appears to be LOCKED.'
 
                         }
                     },
