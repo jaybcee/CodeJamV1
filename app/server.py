@@ -160,9 +160,9 @@ def format_g_res(angle, fname, is_variable_data=False):
             tts = f'Your door seems to be {locked}'
         else:
             if on:
-                'Your stove seems to still be on.'
+                tts = 'Your stove seems to still be on.'
             else:
-                'Your stove is either off or at medium, please double check.'
+                tts = 'Your stove is either off or at medium, please double check.'
 
     temp = {"payload": {
         "google": {
@@ -176,7 +176,6 @@ def format_g_res(angle, fname, is_variable_data=False):
                     },
                     {
                         "basicCard": {
-                            # "title": "Your door is unlocked",
                             "subtitle": f"It appears that the object in the frame is at an angle of {angle} degrees",
                             "image": {
                                 "width": 400,
