@@ -150,6 +150,9 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname):
+    pad = ''
+    if angle == '45' or angle == '135':
+        pad = 'not '
     # locked = None
     # if angle == '45' or angle == '135':
     #     locked = 'locked'
@@ -162,7 +165,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": f'The lock in the image appears to be LOCKED.'
+                            "textToSpeech": f'The lock in the image appears to be {pad}locked.'
 
                         }
                     },
