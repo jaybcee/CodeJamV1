@@ -9,6 +9,8 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 import random
+import requests
+import base64
 
 export_file_url = 'https://drive.google.com/uc?export=download&id=1F2gh7W_KJ3BaFpFm_A4aJyO4lATclvvj'
 export_file_name = 'export.pkl'
@@ -62,6 +64,7 @@ tasks = [asyncio.ensure_future(setup_learner())]
 learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
 loop.close()
 
+
 #
 @app.route('/')
 async def homepage(request):
@@ -80,7 +83,7 @@ async def front(request):
         name = 'front90'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/eval-back')
@@ -94,7 +97,7 @@ async def front(request):
         name = 'back135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/eval-kitchen')
@@ -108,7 +111,7 @@ async def front(request):
         name = 'kitchen135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/analyze', methods=['POST'])
@@ -120,6 +123,19 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
+@app.route('/live')
+async def process_stuff(request):
+    r = requests('https://18c47516.ngrok.io/getframe').content
+    imgdata = base64.b64decode(r)
+    name = 'liveCapture.jpg'
+    filename = hosted_images / name  # I assume you have a way of picking unique filenames
+    with open(filename, 'wb') as f:
+        f.write(imgdata)
+    pred_class = prediction_from_img_path(filename)
+
+    return JSONResponse(format_g_res(pred_class, name))
+
+
 def prediction_from_img_path(img_path):
     pred_class, pred_idx, outputs = learn.predict(open_image(img_path))
     return pred_class
@@ -127,6 +143,21 @@ def prediction_from_img_path(img_path):
 
 def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
+
+
+def format_g_res(angle, fname):
+    temp = {
+        'fulfillmentText': f'The angle is{angle}',
+        'fulfillmentMessages': [
+            {
+                "card": {
+                    "title": f'The angle is{angle}',
+                    "imageUri": f"https://codejamhidden.onrender.com/static/images/{fname}",
+                }
+            }
+        ],
+    }
+    return temp
 
 
 if __name__ == '__main__':
