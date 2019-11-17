@@ -16,7 +16,7 @@ export_file_name = 'export.pkl'
 classes = ['0', '45', '90', '135']
 path = Path(__file__).parent
 
-hosted_images = path / 'images'
+hosted_images = path / 'static' / 'images'
 
 # Static images are used to simulate live data that would be obtained by cropping full frame
 # Data is actually predicted by model and has not been trained with.
@@ -125,7 +125,7 @@ def prediction_from_img_path(img_path):
     return pred_class
 
 
-async def get_url_img(file_name):
+def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
