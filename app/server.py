@@ -83,7 +83,7 @@ def front(request):
         name = 'front90'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
+    return JSONResponse(format_g_res(pred_class, name, 'front'))
 
 
 @app.route('/eval-back', methods=['GET', 'POST'])
@@ -97,7 +97,7 @@ def front(request):
         name = 'back135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
+    return JSONResponse(format_g_res(pred_class, name, 'back'))
 
 
 @app.route('/eval-kitchen', methods=['GET', 'POST'])
@@ -111,7 +111,7 @@ def front(request):
         name = 'kitchen135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
+    return JSONResponse(format_g_res(pred_class, name, 'kitchen'))
 
 
 @app.route('/analyze', methods=['POST'])
@@ -133,7 +133,7 @@ def process_stuff(request):
         f.write(imgdata)
     pred_class = prediction_from_img_path(filename)
 
-    return JSONResponse(format_g_res(pred_class, name))
+    return JSONResponse(format_g_res(pred_class, name, 'live'))
 
 
 def prediction_from_img_path(img_path):
@@ -145,9 +145,18 @@ def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
-def format_g_res(angle, fname):
-    # if 'live' in fname:
-    #     tts = f'Your door appears to be at {angle}'
+def format_g_res(angle, fname, type):
+    if type == 'front' or type == 'back':
+        tts = f'Your door appears to be at {angle} degrees.'
+
+    elif type == 'kitchen':
+        tts = f'Your knob appears to be at {angle} degrees.'
+
+    elif type == 'live':
+        tts = f'The subject of the image appears to be approximately at {angle} degrees.'
+
+        # if 'live' in fname:
+    #     tts = f'Your door appears to be at {angle} degrees.'
     # else:
     #     if 'front' in fname:
     #         locked = angle == '0'
@@ -171,7 +180,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": 'Hello'
+                            "textToSpeech": tts
                         }
                     },
                     {
@@ -180,7 +189,7 @@ def format_g_res(angle, fname):
                             "image": {
                                 "width": 400,
                                 "height": 400,
-                                "url": f"https://codejamhidden.onrender.com/static/image/",
+                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}",
                                 "accessibilityText": "Picture of a lock"
                             },
                             "imageDisplayOptions": "CROPPED"
