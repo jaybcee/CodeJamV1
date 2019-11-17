@@ -128,12 +128,13 @@ def process_stuff(request):
     r = requests.get('https://18c47516.ngrok.io/getframe').content
     imgdata = base64.b64decode(r)
     name = 'liveCapture.jpg'
+    name_to_pass = 'liveCapture'
     filename = hosted_images / name  # I assume you have a way of picking unique filenames
     with open(filename, 'wb') as f:
         f.write(imgdata)
     pred_class = prediction_from_img_path(filename)
 
-    return JSONResponse(format_g_res(pred_class, name, 'live'))
+    return JSONResponse(format_g_res(pred_class, name_to_pass, 'live'))
 
 
 def prediction_from_img_path(img_path):
