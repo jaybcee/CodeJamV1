@@ -25,7 +25,7 @@ hosted_images = path / 'static' / 'images'
 random_locks = []
 
 for i in range(10):
-    random_locks.append(hosted_images / str(i) + '.jpg')
+    random_locks.append(hosted_images / (str(i) + '.jpg'))
 
 # front0 = hosted_images / 'front0.jpg'
 # front90 = hosted_images / 'front90.jpg'
