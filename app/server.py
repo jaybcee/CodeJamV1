@@ -73,7 +73,7 @@ async def homepage(request):
 
 
 @app.route('/eval-front', methods=['GET', 'POST'])
-async def front(request):
+def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = front0
@@ -87,7 +87,7 @@ async def front(request):
 
 
 @app.route('/eval-back', methods=['GET', 'POST'])
-async def front(request):
+def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = back45
@@ -101,7 +101,7 @@ async def front(request):
 
 
 @app.route('/eval-kitchen', methods=['GET', 'POST'])
-async def front(request):
+def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = kitchen0
@@ -133,7 +133,7 @@ def process_stuff(request):
         f.write(imgdata)
     pred_class = prediction_from_img_path(filename)
 
-    return JSONResponse(format_g_res(pred_class, name, is_variable_data=True))
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 def prediction_from_img_path(img_path):
@@ -197,4 +197,4 @@ def format_g_res(angle, fname):
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
-        uvicorn.run(app=app, host='0.0.0.0', port=8080, log_level="info")
+        uvicorn.run(app=app, host='0.0.0.0', port=8080, log_level="debug")
