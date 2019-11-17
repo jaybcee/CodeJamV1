@@ -145,19 +145,19 @@ def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
-def format_g_res(angle, fname, type):
+def format_g_res(angle, fname, type_of):
     tts = ''
-    if type == 'front' or type == 'back':
+    if type_of == 'front' or type_of == 'back':
         if angle == 0 or angle == 45:
             tts = 'Your door appears to be locked'
         else:
             tts = 'Your door appears to be unlocked'
-    elif type == 'kitchen':
+    elif type_of == 'kitchen':
         if angle == 135:
             tts = 'Your stove seems to still be on'
         else:
             tts = 'Your stove is either off at or medium, please confirm.'
-    elif type == 'live':
+    elif type_of == 'live':
         tts = f'The subject of the image appears to be approximately at {angle} degrees.'
 
         # if 'live' in fname:
