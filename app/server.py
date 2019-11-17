@@ -21,7 +21,7 @@ hosted_images = path / 'static' / 'images'
 # Static images are used to simulate live data that would be obtained by cropping full frame
 # Data is actually predicted by model and has not been trained with.
 front0 = hosted_images / 'front0.jpg'
-front90 = hosted_images / 'front135.jpg'
+front90 = hosted_images / 'front90.jpg'
 
 back45 = hosted_images / 'back45.jpg'
 back135 = hosted_images / 'back135.jpg'
@@ -120,7 +120,7 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-def prediction_from_img_path(img_path):
+async def prediction_from_img_path(img_path):
     pred_class, pred_idx, outputs = learn.predict(open_image(img_path))
     return pred_class
 
