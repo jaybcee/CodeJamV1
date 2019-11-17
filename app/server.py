@@ -145,8 +145,8 @@ def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
-def format_g_res(angle, fname, is_variable_data=False):
-    if is_variable_data:
+def format_g_res(angle, fname):
+    if 'live' in fname:
         tts = f'Your door appears to be at {angle}'
     else:
         if 'front' in fname:
