@@ -72,7 +72,7 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
-@app.route('/eval-front',methods=['GET','POST'])
+@app.route('/eval-front', methods=['GET', 'POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -86,7 +86,7 @@ async def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-back', methods=['GET','POST'])
+@app.route('/eval-back', methods=['GET', 'POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -100,7 +100,7 @@ async def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-kitchen', methods=['GET','POST'])
+@app.route('/eval-kitchen', methods=['GET', 'POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -123,9 +123,9 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-@app.route('/live', methods=['GET','POST'])
+@app.route('/live', methods=['GET', 'POST'])
 def process_stuff(request):
-    r = requests('https://18c47516.ngrok.io/getframe').content
+    r = requests.get('https://18c47516.ngrok.io/getframe').content
     imgdata = base64.b64decode(r)
     name = 'liveCapture.jpg'
     filename = hosted_images / name  # I assume you have a way of picking unique filenames
@@ -133,7 +133,7 @@ def process_stuff(request):
         f.write(imgdata)
     pred_class = prediction_from_img_path(filename)
 
-    return JSONResponse(format_g_res(pred_class, name))
+    return JSONResponse(format_g_res(pred_class, name, is_variable_data=True))
 
 
 def prediction_from_img_path(img_path):
@@ -145,18 +145,54 @@ def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
-def format_g_res(angle, fname):
-    temp = {
-        'fulfillmentText': f'The angle is{angle}',
-        'fulfillmentMessages': [
-            {
-                "card": {
-                    "title": f'The angle is{angle}',
-                    "imageUri": f"https://codejamhidden.onrender.com/static/images/{fname}",
-                }
+def format_g_res(angle, fname, lock_state, is_variable_data=False):
+    if (is_variable_data):
+        tts = f'Your door appears to be at {angle}'
+    else:
+        if 'front' in fname:
+            locked = angle == '0'
+        elif 'back' in fname:
+            locked = angle == '45'
+        elif 'kitchen' in fname:
+            on = angle == '135'
+
+        if 'kitchen' not in fname:
+            tts = f'Your door seems to be {locked}'
+        else:
+            if on:
+                'Your stove seems to still be on.'
+            else:
+                'Your stove is either off or at medium, please double check.'
+
+    temp = {"payload": {
+        "google": {
+            "expectUserResponse": False,
+            "richResponse": {
+                "items": [
+                    {
+                        "simpleResponse": {
+                            "textToSpeech": tts
+                        }
+                    },
+                    {
+                        "basicCard": {
+                            # "title": "Your door is unlocked",
+                            "subtitle": f"It appears that the object in the frame is at an angle of {angle} degrees",
+                            "image": {
+                                "width": 400,
+                                "height": 400,
+                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}",
+                                "accessibilityText": "Picture of a lock"
+                            },
+                            "imageDisplayOptions": "CROPPED"
+                        }
+                    },
+                ]
             }
-        ],
+        }
     }
+    }
+
     return temp
 
 
