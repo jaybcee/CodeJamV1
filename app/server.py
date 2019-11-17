@@ -83,7 +83,7 @@ def front(request):
         name = 'front90'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name, 'front'))
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/eval-back', methods=['GET', 'POST'])
@@ -97,7 +97,7 @@ def front(request):
         name = 'back135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name, 'back'))
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/eval-kitchen', methods=['GET', 'POST'])
@@ -111,7 +111,7 @@ def front(request):
         name = 'kitchen135'
 
     pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name, 'kitchen'))
+    return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/analyze', methods=['POST'])
@@ -134,7 +134,7 @@ def process_stuff(request):
         f.write(imgdata)
     pred_class = prediction_from_img_path(filename)
 
-    return JSONResponse(format_g_res(pred_class, name_to_pass, 'live'))
+    return JSONResponse(format_g_res(pred_class, name_to_pass))
 
 
 def prediction_from_img_path(img_path):
@@ -146,39 +146,7 @@ def get_url_img(file_name):
     return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
-def format_g_res(angle, fname, type_of):
-    tts = ''
-    if type_of == 'front' or type_of == 'back':
-        if angle == 0 or angle == 45:
-            tts = 'Your door appears to be locked'
-        else:
-            tts = 'Your door appears to be unlocked'
-    elif type_of == 'kitchen':
-        if angle == 135:
-            tts = 'Your stove seems to still be on'
-        else:
-            tts = 'Your stove is either off at or medium, please confirm.'
-    elif type_of == 'live':
-        tts = f'The subject of the image appears to be approximately at {angle} degrees.'
-
-        # if 'live' in fname:
-    #     tts = f'Your door appears to be at {angle} degrees.'
-    # else:
-    #     if 'front' in fname:
-    #         locked = angle == '0'
-    #     elif 'back' in fname:
-    #         locked = angle == '45'
-    #     elif 'kitchen' in fname:
-    #         on = angle == '135'
-    #
-    #     if 'kitchen' not in fname:
-    #         tts = f'Your door seems to be {locked}'
-    #     else:
-    #         if on:
-    #             tts = 'Your stove seems to still be on.'
-    #         else:
-    #             tts = 'Your stove is either off or at medium, please double check.'
-
+def format_g_res(angle, fname):
     temp = {"payload": {
         "google": {
             "expectUserResponse": False,
@@ -186,7 +154,8 @@ def format_g_res(angle, fname, type_of):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": tts
+                            "textToSpeech" : f'The subject of the image appears to be approximately at {angle} degrees.'
+
                         }
                     },
                     {
