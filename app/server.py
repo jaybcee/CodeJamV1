@@ -22,14 +22,19 @@ hosted_images = path / 'static' / 'images'
 
 # Static images are used to simulate live data that would be obtained by cropping full frame
 # Data is actually predicted by model and has not been trained with.
-front0 = hosted_images / 'front0.jpg'
-front90 = hosted_images / 'front90.jpg'
+random_locks = []
 
-back45 = hosted_images / 'back45.jpg'
-back135 = hosted_images / 'back135.jpg'
+for i in range(10):
+    random_locks.append(hosted_images / str(i) + '.jpg')
 
-kitchen0 = hosted_images / 'kitchen0.jpg'
-kitchen135 = hosted_images / 'kitchen135.jpg'
+# front0 = hosted_images / 'front0.jpg'
+# front90 = hosted_images / 'front90.jpg'
+#
+# back45 = hosted_images / 'back45.jpg'
+# back135 = hosted_images / 'back135.jpg'
+#
+# kitchen0 = hosted_images / 'kitchen0.jpg'
+# kitchen135 = hosted_images / 'kitchen135.jpg'
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
@@ -72,18 +77,16 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
-# @app.route('/eval-front', methods=['GET', 'POST'])
-# def front(request):
-#     rand = bool(random.getrandbits(1))
-#     if (rand):
-#         use_file = front0
-#         name = 'front0'
-#     else:
-#         use_file = front90
-#         name = 'front90'
-#
-#     pred_class = prediction_from_img_path(use_file)
-#     return JSONResponse(format_g_res(pred_class, name))
+@app.route('/eval-front', methods=['GET', 'POST'])
+def front(request):
+    rand = random.randint(0, 10)
+    use_file = random_locks[rand]
+    name = str(rand) + 'jpg'
+
+    pred_class = prediction_from_img_path(use_file)
+    return JSONResponse(format_g_res(pred_class, name))
+
+
 #
 #
 # @app.route('/eval-back', methods=['GET', 'POST'])
@@ -123,18 +126,18 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-@app.route('/live', methods=['GET', 'POST'])
-def process_stuff(request):
-    r = requests.get('https://18c47516.ngrok.io/getframe').content
-    imgdata = base64.b64decode(r)
-    name = 'liveCapture.jpg'
-    name_to_pass = 'liveCapture'
-    filename = hosted_images / name  # I assume you have a way of picking unique filenames
-    with open(filename, 'wb') as f:
-        f.write(imgdata)
-    pred_class = prediction_from_img_path(filename)
-
-    return JSONResponse(format_g_res(pred_class, name_to_pass))
+# @app.route('/live', methods=['GET', 'POST'])
+# def process_stuff(request):
+#     r = requests.get('https://18c47516.ngrok.io/getframe').content
+#     imgdata = base64.b64decode(r)
+#     name = 'liveCapture.jpg'
+#     name_to_pass = 'liveCapture'
+#     filename = hosted_images / name  # I assume you have a way of picking unique filenames
+#     with open(filename, 'wb') as f:
+#         f.write(imgdata)
+#     pred_class = prediction_from_img_path(filename)
+#
+#     return JSONResponse(format_g_res(pred_class, name_to_pass))
 
 
 def prediction_from_img_path(img_path):
@@ -154,7 +157,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech" : f'The subject of the image appears to be approximately at {angle} degrees.'
+                            "textToSpeech": f'The subject of the image appears to be approximately at {angle} degrees.'
 
                         }
                     },
