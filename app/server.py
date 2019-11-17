@@ -146,23 +146,23 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname):
-    if 'live' in fname:
-        tts = f'Your door appears to be at {angle}'
-    else:
-        if 'front' in fname:
-            locked = angle == '0'
-        elif 'back' in fname:
-            locked = angle == '45'
-        elif 'kitchen' in fname:
-            on = angle == '135'
-
-        if 'kitchen' not in fname:
-            tts = f'Your door seems to be {locked}'
-        else:
-            if on:
-                tts = 'Your stove seems to still be on.'
-            else:
-                tts = 'Your stove is either off or at medium, please double check.'
+    # if 'live' in fname:
+    #     tts = f'Your door appears to be at {angle}'
+    # else:
+    #     if 'front' in fname:
+    #         locked = angle == '0'
+    #     elif 'back' in fname:
+    #         locked = angle == '45'
+    #     elif 'kitchen' in fname:
+    #         on = angle == '135'
+    #
+    #     if 'kitchen' not in fname:
+    #         tts = f'Your door seems to be {locked}'
+    #     else:
+    #         if on:
+    #             tts = 'Your stove seems to still be on.'
+    #         else:
+    #             tts = 'Your stove is either off or at medium, please double check.'
 
     temp = {"payload": {
         "google": {
@@ -171,16 +171,16 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": tts
+                            "textToSpeech": 'Hello'
                         }
                     },
                     {
                         "basicCard": {
-                            "subtitle": f"It appears that the object in the frame is at an angle of {angle} degrees",
+                            "subtitle": f"It appears that the object in the frame is at an angle of  degrees",
                             "image": {
                                 "width": 400,
                                 "height": 400,
-                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}",
+                                "url": f"https://codejamhidden.onrender.com/static/image/",
                                 "accessibilityText": "Picture of a lock"
                             },
                             "imageDisplayOptions": "CROPPED"
@@ -197,4 +197,4 @@ def format_g_res(angle, fname):
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
-        uvicorn.run(app=app, host='0.0.0.0', port=8080, log_level="debug")
+        uvicorn.run(app=app, host='0.0.0.0', port=8080, log_level="info")
