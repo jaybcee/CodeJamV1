@@ -79,7 +79,7 @@ async def front(request):
         use_file = front90
         name = 'front90'
 
-    pred_class = prediction_from_img_path(use_file)
+    pred_class = await prediction_from_img_path(use_file)
     return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
 
 
@@ -93,7 +93,7 @@ async def front(request):
         use_file = back135
         name = 'back135'
 
-    pred_class = prediction_from_img_path(use_file)
+    pred_class = await prediction_from_img_path(use_file)
     return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
 
 
@@ -107,7 +107,7 @@ async def front(request):
         use_file = kitchen135
         name = 'kitchen135'
 
-    pred_class = prediction_from_img_path(use_file)
+    pred_class = await prediction_from_img_path(use_file)
     return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
 
 
@@ -120,7 +120,7 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-async def prediction_from_img_path(img_path):
+def prediction_from_img_path(img_path):
     pred_class, pred_idx, outputs = learn.predict(open_image(img_path))
     return pred_class
 
