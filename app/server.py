@@ -72,7 +72,7 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
-@app.route('/eval-front')
+@app.route('/eval-front',methods=['GET,POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -86,7 +86,7 @@ async def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-back')
+@app.route('/eval-back', methods=['GET,POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -100,7 +100,7 @@ async def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-kitchen')
+@app.route('/eval-kitchen', methods=['GET,POST'])
 async def front(request):
     rand = bool(random.getrandbits(1))
     if (rand):
@@ -123,8 +123,8 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-@app.route('/live')
-async def process_stuff(request):
+@app.route('/live', methods=['GET,POST'])
+def process_stuff(request):
     r = requests('https://18c47516.ngrok.io/getframe').content
     imgdata = base64.b64decode(r)
     name = 'liveCapture.jpg'
