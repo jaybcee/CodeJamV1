@@ -81,7 +81,7 @@ async def homepage(request):
 def front(request):
     rand = random.randint(0, 10)
     use_file = random_locks[rand]
-    name = str(rand) + 'jpg'
+    name = str(rand) + '.jpg'
 
     pred_class = prediction_from_img_path(use_file)
     return JSONResponse(format_g_res(pred_class, name))
@@ -150,6 +150,11 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname):
+    locked = None
+    if angle == '45' or angle == '135':
+        locked = 'locked'
+    else:
+        locked = 'unlocked'
     temp = {"payload": {
         "google": {
             "expectUserResponse": False,
@@ -157,17 +162,17 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": f'The subject of the image appears to be approximately at {angle} degrees.'
+                            "textToSpeech": f'The lock in the image appears to be {locked}.'
 
                         }
                     },
                     {
                         "basicCard": {
-                            "subtitle": f"It appears that the object in the frame is at an angle of {angle}",
+                            "subtitle": f"It appears that the object in the frame is at an angle of {angle} degrees.",
                             "image": {
                                 "width": 400,
                                 "height": 400,
-                                "url": f"https://codejamhidden.onrender.com/static/images/{fname}.jpg",
+                                "url": f"https://codejamhidden.onrender.com/static/images/{fname}",
                                 "accessibilityText": "Picture of a lock"
                             },
                             "imageDisplayOptions": "CROPPED"
