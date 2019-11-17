@@ -72,8 +72,22 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
-@app.route('/eval-front', methods=['GET', 'POST'])
-def front(request):
+@app.route('/eval', methods=['GET', 'POST'])
+async def triage(request):
+    req = await request.json().queryResults.intent.displayName
+    print(req)
+    if req == 'Kitchen':
+        eval_kitchen()
+    elif req == 'Front':
+        eval_kitchen()
+    elif req == 'Back':
+        eval_back()
+    elif req == 'Live':
+        eval_live()
+
+
+# @app.route('/eval-front', methods=['GET', 'POST'])
+def eval_front():
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = front0
@@ -86,8 +100,8 @@ def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-back', methods=['GET', 'POST'])
-def front(request):
+# @app.route('/eval-back', methods=['GET', 'POST'])
+def eval_back():
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = back45
@@ -100,8 +114,8 @@ def front(request):
     return JSONResponse(format_g_res(pred_class, name))
 
 
-@app.route('/eval-kitchen', methods=['GET', 'POST'])
-def front(request):
+# @app.route('/eval-kitchen', methods=['GET', 'POST'])
+def eval_kitchen():
     rand = bool(random.getrandbits(1))
     if (rand):
         use_file = kitchen0
@@ -123,8 +137,8 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-@app.route('/live', methods=['GET', 'POST'])
-def process_stuff(request):
+# @app.route('/live', methods=['GET', 'POST'])
+def eval_live():
     r = requests.get('https://18c47516.ngrok.io/getframe').content
     imgdata = base64.b64decode(r)
     name = 'liveCapture.jpg'
@@ -154,7 +168,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech" : f'The subject of the image appears to be approximately at {angle} degrees.'
+                            "textToSpeech": f'The subject of the image appears to be approximately at {angle} degrees.'
 
                         }
                     },
