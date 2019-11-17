@@ -1,5 +1,11 @@
 body {
     background-color: #ffb35c;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+}
+h1 {
+    color:white;
+    font-weight: bold;
+
 }
 
 .no-display {
@@ -44,19 +50,19 @@ button.choose-file-button {
     height: 40px;
     border-radius: 2px;
     background-color: #ffffff;
-    border: solid 1px #ffffff;
+    border: solid 1px black;
     font-size: 13px;
-    color: #ffffff;
+    color: black;
 }
 
 button.analyze-button {
     width: 200px;
     height: 40px;
-    border: solid 1px #ffffff;
+    border: solid 1px black;
     border-radius: 2px;
     background-color: #ffffff;
     font-size: 13px;
-    color: #ffffff;
+    color: black;
 }
 
 button:focus {
