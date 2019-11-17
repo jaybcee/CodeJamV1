@@ -8,12 +8,26 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
+import random
 
 export_file_url = 'https://drive.google.com/uc?export=download&id=1F2gh7W_KJ3BaFpFm_A4aJyO4lATclvvj'
 export_file_name = 'export.pkl'
 
-classes = ['ataulfo', 'kent', 'maya']
+classes = ['0', '45', '90', '135']
 path = Path(__file__).parent
+
+hosted_images = path / 'images'
+
+# Static images are used to simulate live data that would be obtained by cropping full frame
+# Data is actually predicted by model and has not been trained with.
+front0 = hosted_images / 'front0.jpg'
+front90 = hosted_images / 'front135.jpg'
+
+back45 = hosted_images / 'back45.jpg'
+back135 = hosted_images / 'back135.jpg'
+
+kitchen0 = hosted_images / 'kitchen0.jpg'
+kitchen135 = hosted_images / 'kitchen135.jpg'
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
@@ -55,6 +69,48 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
+@app.route('/eval-front')
+async def front(request):
+    rand = bool(random.getrandbits(1))
+    if (rand):
+        use_file = front0
+        name = 'front0'
+    else:
+        use_file = front90
+        name = 'front90'
+
+    pred_class = prediction_from_img_path(use_file)
+    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+
+
+@app.route('/eval-back')
+async def front(request):
+    rand = bool(random.getrandbits(1))
+    if (rand):
+        use_file = back45
+        name = 'back45'
+    else:
+        use_file = back135
+        name = 'back135'
+
+    pred_class = prediction_from_img_path(use_file)
+    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+
+
+@app.route('/eval-kitchen')
+async def front(request):
+    rand = bool(random.getrandbits(1))
+    if (rand):
+        use_file = kitchen0
+        name = 'kitchen0'
+    else:
+        use_file = kitchen135
+        name = 'kitchen135'
+
+    pred_class = prediction_from_img_path(use_file)
+    return JSONResponse({'result': str(pred_class), 'url': get_url_img(name)})
+
+
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
     img_data = await request.form()
@@ -62,6 +118,15 @@ async def analyze(request):
     img = open_image(BytesIO(img_bytes))
     prediction = learn.predict(img)[0]
     return JSONResponse({'result': str(prediction)})
+
+
+async def prediction_from_img_path(img_path):
+    pred_class, pred_idx, outputs = learn.predict(open_image(img_path))
+    return pred_class
+
+
+async def get_url_img(file_name):
+    return f"https://dockersafehouse.appspot.com/static/images/{file_name}.jpg"
 
 
 if __name__ == '__main__':
