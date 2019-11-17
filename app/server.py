@@ -150,7 +150,7 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname):
-    if angle == '45' or angle == '135':
+    if str(angle) == '45' or str(angle) == '135':
         tts = 'The lock in the image appears to be unlocked.'
     else:
         tts = 'The lock in the image appears to be locked.'
