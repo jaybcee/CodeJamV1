@@ -73,13 +73,13 @@ async def homepage(request):
 
 
 @app.route('/eval', methods=['GET', 'POST'])
-async def triage(request):
-    req = await request.json().queryResults.intent.displayName
+def triage(request):
+    req = request.json().queryResults.intent.displayName
     print(req)
     if req == 'Kitchen':
         eval_kitchen()
     elif req == 'Front':
-        eval_kitchen()
+        eval_front()
     elif req == 'Back':
         eval_back()
     elif req == 'Live':
