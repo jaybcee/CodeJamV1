@@ -195,7 +195,7 @@ def format_g_res(angle, fname, type_of):
                             "image": {
                                 "width": 400,
                                 "height": 400,
-                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}.jpg",
+                                "url": f"https://codejamhidden.onrender.com/static/images/{fname}.jpg",
                                 "accessibilityText": "Picture of a lock"
                             },
                             "imageDisplayOptions": "CROPPED"
