@@ -147,11 +147,15 @@ def get_url_img(file_name):
 
 def format_g_res(angle, fname, type):
     if type == 'front' or type == 'back':
-        tts = f'Your door appears to be at {angle} degrees.'
-
+        if angle == 0 or angle == 45:
+            tts = 'Your door appears to be locked'
+        else:
+            tts = 'Your door appears to be unlocked'
     elif type == 'kitchen':
-        tts = f'Your knob appears to be at {angle} degrees.'
-
+        if angle == 135:
+            tts = 'Your stove seems to still be on'
+        else:
+            tts = 'Your stove is either off at or medium, please confirm.'
     elif type == 'live':
         tts = f'The subject of the image appears to be approximately at {angle} degrees.'
 
@@ -185,11 +189,11 @@ def format_g_res(angle, fname, type):
                     },
                     {
                         "basicCard": {
-                            "subtitle": f"It appears that the object in the frame is at an angle of  degrees",
+                            "subtitle": f"It appears that the object in the frame is at an angle of {angle}",
                             "image": {
                                 "width": 400,
                                 "height": 400,
-                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}",
+                                "url": f"https://codejamhidden.onrender.com/static/image/{fname}.jpg",
                                 "accessibilityText": "Picture of a lock"
                             },
                             "imageDisplayOptions": "CROPPED"
