@@ -146,6 +146,7 @@ def get_url_img(file_name):
 
 
 def format_g_res(angle, fname, type):
+    tts = ''
     if type == 'front' or type == 'back':
         if angle == 0 or angle == 45:
             tts = 'Your door appears to be locked'
