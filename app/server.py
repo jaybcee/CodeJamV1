@@ -72,60 +72,46 @@ async def homepage(request):
     return HTMLResponse(html_file.open().read())
 
 
-@app.route('/eval', methods=['GET', 'POST'])
-def triage(request):
-    req = request.json().queryResults.intent.displayName
-    print(req)
-    if req == 'Kitchen':
-        eval_kitchen()
-    elif req == 'Front':
-        eval_front()
-    elif req == 'Back':
-        eval_back()
-    elif req == 'Live':
-        eval_live()
-
-
 # @app.route('/eval-front', methods=['GET', 'POST'])
-def eval_front():
-    rand = bool(random.getrandbits(1))
-    if (rand):
-        use_file = front0
-        name = 'front0'
-    else:
-        use_file = front90
-        name = 'front90'
-
-    pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
-
-
+# def front(request):
+#     rand = bool(random.getrandbits(1))
+#     if (rand):
+#         use_file = front0
+#         name = 'front0'
+#     else:
+#         use_file = front90
+#         name = 'front90'
+#
+#     pred_class = prediction_from_img_path(use_file)
+#     return JSONResponse(format_g_res(pred_class, name))
+#
+#
 # @app.route('/eval-back', methods=['GET', 'POST'])
-def eval_back():
-    rand = bool(random.getrandbits(1))
-    if (rand):
-        use_file = back45
-        name = 'back45'
-    else:
-        use_file = back135
-        name = 'back135'
-
-    pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
-
-
+# def front(request):
+#     rand = bool(random.getrandbits(1))
+#     if (rand):
+#         use_file = back45
+#         name = 'back45'
+#     else:
+#         use_file = back135
+#         name = 'back135'
+#
+#     pred_class = prediction_from_img_path(use_file)
+#     return JSONResponse(format_g_res(pred_class, name))
+#
+#
 # @app.route('/eval-kitchen', methods=['GET', 'POST'])
-def eval_kitchen():
-    rand = bool(random.getrandbits(1))
-    if (rand):
-        use_file = kitchen0
-        name = 'kitchen0'
-    else:
-        use_file = kitchen135
-        name = 'kitchen135'
-
-    pred_class = prediction_from_img_path(use_file)
-    return JSONResponse(format_g_res(pred_class, name))
+# def front(request):
+#     rand = bool(random.getrandbits(1))
+#     if (rand):
+#         use_file = kitchen0
+#         name = 'kitchen0'
+#     else:
+#         use_file = kitchen135
+#         name = 'kitchen135'
+#
+#     pred_class = prediction_from_img_path(use_file)
+#     return JSONResponse(format_g_res(pred_class, name))
 
 
 @app.route('/analyze', methods=['POST'])
@@ -137,8 +123,8 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})
 
 
-# @app.route('/live', methods=['GET', 'POST'])
-def eval_live():
+@app.route('/live', methods=['GET', 'POST'])
+def process_stuff(request):
     r = requests.get('https://18c47516.ngrok.io/getframe').content
     imgdata = base64.b64decode(r)
     name = 'liveCapture.jpg'
@@ -168,7 +154,7 @@ def format_g_res(angle, fname):
                 "items": [
                     {
                         "simpleResponse": {
-                            "textToSpeech": f'The subject of the image appears to be approximately at {angle} degrees.'
+                            "textToSpeech" : f'The subject of the image appears to be approximately at {angle} degrees.'
 
                         }
                     },
