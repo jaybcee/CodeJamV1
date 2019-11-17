@@ -207,6 +207,7 @@ def format_g_res(angle, fname, type_of):
     }
     }
 
+    print(temp)
     return temp
 
 
